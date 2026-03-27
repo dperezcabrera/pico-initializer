@@ -47,11 +47,6 @@ class SecureController:
       yaml: `\nauth_client:\n  enabled: true\n  issuer: "http://localhost:8081"\n  audience: "my-api"\n`,
     };
 
-    result.bootModules = [`"pico_client_auth"`];
-    if (hasFastapi) {
-      result.bootModules.push(`"${pkg}.secure_controller"`);
-    }
-
     return result;
   },
 };

@@ -37,7 +37,6 @@ class Assistant:
       },
       dependencies: ['"pico-agent>=0.1.0"'],
       requirements: ['pico-agent'],
-      bootModules: [`"pico_agent"`, `"${pkg}.tools"`, `"${pkg}.agents"`],
     };
   },
 };

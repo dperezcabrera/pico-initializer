@@ -53,7 +53,6 @@ class ExampleRepository:
       },
       dependencies: ['"pico-sqlalchemy>=0.1.0"', '"aiosqlite>=0.20.0"'],
       requirements: ['pico-sqlalchemy', 'aiosqlite'],
-      bootModules: [`"pico_sqlalchemy"`, `"${pkg}.models"`, `"${pkg}.repositories"`],
       yaml: `\ndatabase:\n  url: "sqlite+aiosqlite:///data.db"\n  echo: true\n`,
       serviceImports: `\nfrom ${pkg}.repositories import ExampleRepository\n`,
       serviceDeps: ['repo: ExampleRepository'],

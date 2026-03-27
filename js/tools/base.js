@@ -24,7 +24,6 @@ build/
 .ruff_cache/
 `,
       },
-      bootModules: [],
       dependencies: [],
       requirements: [],
       yaml: '',

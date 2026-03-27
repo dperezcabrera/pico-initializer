@@ -5,7 +5,6 @@ const CONTRIBUTION_DEFAULTS = {
   files: {},
   dependencies: [],
   requirements: [],
-  bootModules: [],
   yaml: '',
   configClasses: '',
   serviceImports: '',
@@ -58,8 +57,7 @@ export class Generator {
     const ctx = {
       dependencies: [],
       requirements: [],
-      bootModules: [],
-      yaml: '',
+          yaml: '',
       configClasses: '',
       serviceImports: '',
       serviceDeps: [],
@@ -69,7 +67,6 @@ export class Generator {
     for (const c of contributions) {
       ctx.dependencies.push(...c.dependencies);
       ctx.requirements.push(...c.requirements);
-      ctx.bootModules.push(...c.bootModules);
       ctx.yaml += c.yaml;
       ctx.configClasses += c.configClasses;
       ctx.serviceImports += c.serviceImports;
@@ -113,13 +110,6 @@ export class Generator {
     const pkg = config.packageName;
     const hasFastapi = config.modules.includes('fastapi');
 
-    const allModules = [
-      `"${pkg}.config"`,
-      `"${pkg}.services"`,
-      ...ctx.bootModules,
-    ];
-    const modulesStr = allModules.map((m) => `            ${m},`).join('\n');
-
     if (hasFastapi) {
       return `from fastapi import FastAPI
 from pico_boot import init
@@ -128,12 +118,7 @@ from pico_ioc import configuration, YamlTreeSource
 
 def create_app() -> FastAPI:
     config = configuration(YamlTreeSource("application.yaml"))
-    container = init(
-        modules=[
-${modulesStr}
-        ],
-        config=config,
-    )
+    container = init(modules=["${pkg}"], config=config)
     return container.get(FastAPI)
 
 
@@ -151,12 +136,7 @@ from ${pkg}.services import ExampleService
 
 async def main():
     config = configuration(YamlTreeSource("application.yaml"))
-    container = init(
-        modules=[
-${modulesStr}
-        ],
-        config=config,
-    )
+    container = init(modules=["${pkg}"], config=config)
     service = await container.aget(ExampleService)
     print(service.greet("world"))
     await container.ashutdown()

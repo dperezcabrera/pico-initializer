@@ -31,7 +31,6 @@ class ExampleController:
       },
       dependencies: ['"pico-fastapi>=0.1.0"'],
       requirements: ['pico-fastapi', 'uvicorn'],
-      bootModules: [`"pico_fastapi"`, `"${pkg}.controllers"`],
       yaml: `\nfastapi:\n  title: "${config.projectName}"\n  version: "0.1.0"\n`,
     };
   },

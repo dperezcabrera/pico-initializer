@@ -26,7 +26,6 @@ class ExampleTasks:
       },
       dependencies: ['"pico-celery>=0.1.0"'],
       requirements: ['pico-celery', 'redis'],
-      bootModules: [`"pico_celery"`, `"${pkg}.tasks"`],
       yaml: `\ncelery:\n  broker_url: "redis://localhost:6379/0"\n  backend_url: "redis://localhost:6379/0"\n`,
       configClasses: `\n
 @configured(target="self", prefix="celery", mapping="tree")
