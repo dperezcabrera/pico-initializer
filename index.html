@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>pico-initializer</title>
+  <title>Pico Initializer</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233f51b5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4'/></svg>">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
   <style>
@@ -252,7 +252,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
         </svg>
       </span>
-      <span class="md-header__title">pico-initializer</span>
+      <span class="md-header__title">Pico Initializer</span>
       <span class="md-header__spacer"></span>
       <button class="md-header__toggle" id="theme-toggle" title="Toggle dark mode">
         <svg id="icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -337,6 +337,11 @@
               <span class="mod-name">pico-client-auth</span>
               <span class="mod-desc">JWT + RBAC</span>
             </label>
+            <label class="mod-row" data-search="pico-server-auth jwt wallet challenge login jwks ed25519 secp256k1 ml-dsa">
+              <input type="checkbox" name="module" value="server-auth">
+              <span class="mod-name">pico-server-auth</span>
+              <span class="mod-desc">Auth server (wallet + JWT)</span>
+            </label>
           </div>
           <p id="no-results" style="display:none; padding:.8rem 0; font-size:.75rem; color:var(--md-on-bg-light);">No matches.</p>
         </div>
@@ -344,6 +349,10 @@
         <!-- Extras (20%) -->
         <div class="col-extras">
           <span class="section-title">Options</span>
+          <label class="extra-row">
+            <input type="checkbox" id="include-pico-module">
+            <span class="extra-name">Pico module</span>
+          </label>
           <label class="extra-row">
             <input type="checkbox" id="include-tests" checked>
             <span class="extra-name">Tests</span>
@@ -371,6 +380,14 @@
             <div>
               Products CRUD
               <span class="example-req">fastapi + sqlalchemy</span>
+            </div>
+          </a>
+
+          <a class="example-link" id="ex-celery" data-requires="celery" href="#">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <div>
+              Worker / Client
+              <span class="example-req">celery</span>
             </div>
           </a>
 
@@ -466,11 +483,12 @@
   });
 
   // Example download: generate project with example included
-  document.getElementById('ex-crud').addEventListener('click', (e) => {
-    e.preventDefault();
-    if (e.currentTarget.classList.contains('disabled')) return;
-    // Dispatch a custom event that app.js listens for
-    document.dispatchEvent(new CustomEvent('download-example', { detail: 'crud' }));
+  document.querySelectorAll('.example-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (e.currentTarget.classList.contains('disabled')) return;
+      document.dispatchEvent(new CustomEvent('download-example', { detail: e.currentTarget.id.replace('ex-', '') }));
+    });
   });
 </script>
 </body>

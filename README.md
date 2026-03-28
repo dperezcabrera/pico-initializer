@@ -1,6 +1,6 @@
 # pico-initializer
 
-Project generator for the [pico-framework](https://github.com/dperezcabrera/pico-boot) ecosystem.
+Project generator for the [pico-boot](https://github.com/dperezcabrera/pico-boot) ecosystem.
 
 Select modules, configure options, and download a ready-to-run project as a ZIP.
 

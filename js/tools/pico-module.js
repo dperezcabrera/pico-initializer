@@ -1,0 +1,179 @@
+// pico-module.js — Scaffold for a pico-boot auto-discoverable module.
+// When active, overrides the default app scaffold with src/ layout,
+// entry point, ruff config, and module-oriented structure.
+
+export default {
+  name: 'pico-module',
+  description: 'Scaffold a pico-boot module with entry point, ruff, and auto-discovery',
+
+  matches(config) {
+    return config.includePicoModule === true;
+  },
+
+  generate(config) {
+    const pkg = config.packageName;
+    const name = config.projectName;
+    const pyver = config.pythonVersion;
+    const pascal = _pascal(pkg);
+
+    const has = (m) => config.modules.includes(m);
+
+    const deps = [
+      '    "pico-ioc[yaml]>=2.2.0",',
+      '    "pico-boot>=0.1.0",',
+    ];
+    if (has('fastapi'))    deps.push('    "pico-fastapi>=0.1.0",');
+    if (has('sqlalchemy')) deps.push('    "pico-sqlalchemy>=0.1.0",');
+    if (has('celery'))     deps.push('    "pico-celery>=0.1.0",');
+    if (has('pydantic'))   deps.push('    "pico-pydantic>=0.1.0",');
+    if (has('agent'))      deps.push('    "pico-agent>=0.1.0",');
+    if (has('auth'))       deps.push('    "pico-client-auth>=0.1.0",');
+
+    const files = {};
+
+    // Override pyproject.toml with src/ layout + entry point + ruff
+    files['pyproject.toml'] = `[build-system]
+requires = ["setuptools>=69.0", "wheel", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "${name}"
+description = "${config.description}"
+requires-python = ">=${pyver}"
+dynamic = ["version"]
+dependencies = [
+${deps.join('\n')}
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.9.0",
+]
+
+[project.entry-points."pico_boot.modules"]
+${pkg} = "${pkg}"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+
+[tool.ruff]
+target-version = "py${pyver.replace('.', '')}"
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["F841"]
+`;
+
+    // Module source under src/
+    files[`src/${pkg}/__init__.py`] = `"""${name}: a pico-boot auto-discoverable module."""\n`;
+
+    files[`src/${pkg}/config.py`] = `from dataclasses import dataclass
+
+from pico_ioc import configured
+
+
+@configured(target="self", prefix="${pkg}", mapping="tree")
+@dataclass
+class ${pascal}Settings:
+    enabled: bool = True
+`;
+
+    files[`src/${pkg}/components.py`] = `from pico_ioc import component
+
+from ${pkg}.config import ${pascal}Settings
+
+
+@component
+class ${pascal}Service:
+    def __init__(self, settings: ${pascal}Settings):
+        self.settings = settings
+`;
+
+    // Tests
+    files['tests/__init__.py'] = '';
+
+    files['tests/conftest.py'] = `import pytest
+
+from pico_ioc import DictSource, configuration, init
+
+
+@pytest.fixture
+def container():
+    config = configuration(DictSource({"${pkg}": {"enabled": True}}))
+    c = init(modules=["${pkg}"], config=config)
+    yield c
+    c.shutdown()
+`;
+
+    files['tests/test_module.py'] = `from ${pkg}.components import ${pascal}Service
+
+
+def test_service_is_resolved(container):
+    service = container.get(${pascal}Service)
+    assert service is not None
+    assert service.settings.enabled is True
+`;
+
+    // Override .gitignore
+    files['.gitignore'] = `__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+*.db
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+`;
+
+    // Override README
+    files['README.md'] = `# ${name}
+
+A [pico-boot](https://github.com/dperezcabrera/pico-boot) module.
+
+## Installation
+
+\`\`\`bash
+pip install ${name}
+\`\`\`
+
+Auto-discovered by pico-boot — no need to list in \`modules=[]\`.
+
+## Configuration
+
+\`\`\`yaml
+${pkg}:
+  enabled: true
+\`\`\`
+
+## Development
+
+\`\`\`bash
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"
+ruff check src/ tests/
+pytest tests/
+\`\`\`
+`;
+
+    return { files };
+  },
+};
+
+function _pascal(snake) {
+  return snake.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+}

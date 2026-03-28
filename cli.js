@@ -12,23 +12,25 @@
 //   {
 //     "projectName": "my-service",
 //     "packageName": "my_service",       (optional, derived from projectName)
-//     "description": "My service",       (optional)
 //     "pythonVersion": "3.12",           (optional, default "3.12")
 //     "modules": ["fastapi"],            (optional, default [])
+//     "includePicoModule": false,        (optional, default false — use module mode)
 //     "includeDocker": false,            (optional, default false)
 //     "includeTests": true               (optional, default true)
 //   }
 
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
-import { generator } from './js/registry.js';
+import { appGenerator, moduleGenerator } from './js/registry.js';
 
 const args = process.argv.slice(2);
 
 // --list: show registered tools
 if (args.includes('--list')) {
-  const tools = generator.list();
-  console.log(JSON.stringify(tools, null, 2));
+  console.log(JSON.stringify({
+    app: appGenerator.list(),
+    module: moduleGenerator.list(),
+  }, null, 2));
   process.exit(0);
 }
 
@@ -60,14 +62,16 @@ try {
 const config = {
   projectName: input.projectName,
   packageName: input.packageName || input.projectName.replace(/-/g, '_').replace(/[^a-z0-9_]/gi, '').toLowerCase(),
-  description: input.description || 'A pico-framework project.',
+  description: input.description || 'A pico-boot project.',
   pythonVersion: input.pythonVersion || '3.12',
   modules: input.modules || [],
+  includePicoModule: input.includePicoModule ?? false,
   includeDocker: input.includeDocker ?? false,
   includeTests: input.includeTests ?? true,
   includeCompose: input.includeCompose ?? false,
   includeAuthServer: input.includeAuthServer ?? false,
   includeExample: input.includeExample ?? false,
+  includeExampleCelery: input.includeExampleCelery ?? false,
 };
 
 if (!config.projectName) {
@@ -75,6 +79,7 @@ if (!config.projectName) {
   process.exit(1);
 }
 
+const generator = config.includePicoModule ? moduleGenerator : appGenerator;
 const targetDir = outputDir || config.projectName;
 const files = generator.generate(config);
 
