@@ -1,4 +1,5 @@
 // pydantic.js — pico-pydantic: validation (contributes deps only, @validate used in services)
+import { dep } from '../versions.js';
 
 export default {
   name: 'pydantic',
@@ -11,7 +12,7 @@ export default {
   generate() {
     return {
       files: {},
-      dependencies: ['"pico-pydantic>=0.1.0"'],
+      dependencies: [dep('pico-pydantic')],
       requirements: ['pico-pydantic'],
     };
   },

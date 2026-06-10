@@ -14,6 +14,7 @@ import serverAuth from './tools/server-auth.js';
 import docker from './tools/docker.js';
 import compose from './tools/compose.js';
 import tests from './tools/tests.js';
+import skills from './tools/skills.js';
 import exampleCrud from './tools/example-crud.js';
 import exampleCelery from './tools/example-celery.js';
 
@@ -31,13 +32,15 @@ appGenerator
   .register(docker)
   .register(compose)
   .register(tests)
+  .register(skills)
   .register(exampleCrud)
   .register(exampleCelery);
 
 // Module mode: src/ layout + entry point + ruff
 const moduleGenerator = new Generator();
 moduleGenerator
-  .assembler(picoModule);
+  .assembler(picoModule)
+  .register(skills);
 
 export { appGenerator, moduleGenerator };
 export { Generator } from './generator.js';

@@ -1,4 +1,5 @@
 // celery.js — pico-celery: background tasks
+import { dep } from '../versions.js';
 
 export default {
   name: 'celery',
@@ -24,7 +25,7 @@ class ExampleTasks:
         return f"Hello {name}!"
 `,
       },
-      dependencies: ['"pico-celery>=0.1.0"'],
+      dependencies: [dep('pico-celery'), '"redis>=5.0"'],
       requirements: ['pico-celery', 'redis'],
       yaml: `\ncelery:\n  broker_url: "redis://localhost:6379/0"\n  backend_url: "redis://localhost:6379/0"\n`,
       configClasses: `\n

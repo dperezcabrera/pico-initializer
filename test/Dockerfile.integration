@@ -13,18 +13,19 @@ WORKDIR /opt/pico-initializer
 COPY js/ js/
 COPY cli.js .
 
-# Pre-install all pico dependencies
+# Pre-install all pico dependencies (constraints mirror js/versions.js)
 RUN pip install --no-cache-dir \
-    "pico-ioc[yaml]>=2.2.0" \
-    "pico-boot>=0.1.0" \
-    "pico-fastapi>=0.1.0" \
-    "pico-sqlalchemy>=0.1.0" \
-    "pico-celery>=0.1.0" \
-    "pico-pydantic>=0.1.0" \
-    "pico-client-auth>=0.1.0" \
+    "pico-ioc[yaml]>=2.2.7,<3.0" \
+    "pico-boot~=0.1.1" \
+    "pico-fastapi~=0.3.0" \
+    "pico-sqlalchemy~=0.4.0" \
+    "pico-celery~=0.2.1" \
+    "pico-pydantic~=0.2.2" \
+    "pico-client-auth~=0.4.2" \
     "aiosqlite>=0.20.0" \
     "uvicorn" \
     "httpx" \
+    "pytest" \
     "setuptools>=69.0" \
     "setuptools-scm>=8.0" \
     "wheel"

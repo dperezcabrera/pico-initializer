@@ -16,7 +16,8 @@
 //     "modules": ["fastapi"],            (optional, default [])
 //     "includePicoModule": false,        (optional, default false — use module mode)
 //     "includeDocker": false,            (optional, default false)
-//     "includeTests": true               (optional, default true)
+//     "includeTests": true,              (optional, default true)
+//     "includeSkills": true              (optional, default true — AI skills installer)
 //   }
 
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -68,6 +69,7 @@ const config = {
   includePicoModule: input.includePicoModule ?? false,
   includeDocker: input.includeDocker ?? false,
   includeTests: input.includeTests ?? true,
+  includeSkills: input.includeSkills ?? true,
   includeCompose: input.includeCompose ?? false,
   includeAuthServer: input.includeAuthServer ?? false,
   includeExample: input.includeExample ?? false,

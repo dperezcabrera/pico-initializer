@@ -30,6 +30,8 @@ for f in \
     src/pico_foo/__init__.py \
     src/pico_foo/config.py \
     src/pico_foo/components.py \
+    CLAUDE.md \
+    install-skills.sh \
     tests/__init__.py \
     tests/conftest.py \
     tests/test_module.py; do
@@ -80,10 +82,9 @@ else
     FAIL=$((FAIL+1))
 fi
 
-# Install + test
+# Install + test — exactly as the generated README instructs (no git, no env vars)
 cd "$WORK/pico-foo"
-git init -q && git add -A && git commit -q -m "init"
-if SETUPTOOLS_SCM_PRETEND_VERSION=0.1.0 pip install -e . -q 2>/dev/null; then
+if pip install -e . -q 2>/dev/null; then
     echo "    install: OK"
     if python -c "from pico_foo.components import PicoFooService; print('import OK')" 2>/dev/null; then
         echo "    import: OK"
@@ -180,10 +181,9 @@ else
     FAIL=$((FAIL+1))
 fi
 
-# Install + runtime test
+# Install + runtime test — exactly as the generated README instructs (no git, no env vars)
 cd "$WORK/my-service"
-git init -q && git add -A && git commit -q -m "init"
-if SETUPTOOLS_SCM_PRETEND_VERSION=0.1.0 pip install -e . -q 2>/dev/null; then
+if pip install -e . -q 2>/dev/null; then
     echo "    install: OK"
 
     # Import check
@@ -215,13 +215,14 @@ celery:
 EXTRA
 
     # Endpoint test (auto-discovery active)
+    # stderr discarded: deprecation warnings must not pollute the status code
     result=$(cd "$WORK/my-service" && python -c "
 from my_service.main import app
 from fastapi.testclient import TestClient
 c = TestClient(app)
 r = c.get('/api/example/test')
 print(r.status_code)
-" 2>&1) || true
+" 2>/dev/null | tail -1) || true
 
     if [ "$result" = "401" ] || [ "$result" = "200" ]; then
         echo "    endpoint: OK ($result)"
@@ -237,6 +238,50 @@ print(r.status_code)
     fi
 
     pip uninstall -y my-service -q 2>/dev/null || true
+else
+    echo "    install: FAIL"
+    FAIL=$((FAIL+1))
+fi
+
+echo ""
+
+# ─── Test 3: Base app (no modules) — install, run, pytest ───────────────────
+
+echo "── Test 3: Base app run ──"
+
+node "$CLI" --output-dir "$WORK/demo" '{"projectName":"demo","modules":[],"includeTests":true}'
+
+for f in CLAUDE.md install-skills.sh tests/test_app.py; do
+    if [ ! -f "$WORK/demo/$f" ]; then
+        echo "    MISSING: $f"
+        FAIL=$((FAIL+1))
+    fi
+done
+
+cd "$WORK/demo"
+if pip install -e . -q 2>/dev/null; then
+    echo "    install: OK"
+
+    # PICO_BOOT_AUTO_PLUGINS=false: the test image pre-installs every pico
+    # module; a real user env only has the declared dependencies.
+    output=$(PICO_BOOT_AUTO_PLUGINS=false python -m demo.main 2>&1) || true
+    if [ "$output" = "Hello world from demo!" ]; then
+        echo "    run: OK"
+        PASS=$((PASS+1))
+    else
+        echo "    run: FAIL ($output)"
+        FAIL=$((FAIL+1))
+    fi
+
+    if PICO_BOOT_AUTO_PLUGINS=false python -m pytest tests/ -q >/dev/null 2>&1; then
+        echo "    pytest: OK"
+        PASS=$((PASS+1))
+    else
+        echo "    pytest: FAIL"
+        FAIL=$((FAIL+1))
+    fi
+
+    pip uninstall -y demo -q 2>/dev/null || true
 else
     echo "    install: FAIL"
     FAIL=$((FAIL+1))

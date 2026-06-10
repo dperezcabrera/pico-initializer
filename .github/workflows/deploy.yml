@@ -1,8 +1,12 @@
-name: Deploy to GitHub Pages
+name: Test and Deploy
 
 on:
   push:
     branches: [main]
+  schedule:
+    # Weekly drift check: new pico-* releases on PyPI can break generated
+    # projects without any push to this repo.
+    - cron: '0 6 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -15,7 +19,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Smoke test (all module combinations)
+        run: |
+          docker build -f test/Dockerfile -t pico-initializer-smoke .
+          docker run --rm pico-initializer-smoke
+
+      - name: Integration test (install + run generated projects)
+        run: |
+          docker build -f test/Dockerfile.integration -t pico-initializer-integration .
+          docker run --rm pico-initializer-integration
+
   deploy:
+    needs: test
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

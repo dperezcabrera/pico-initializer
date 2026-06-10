@@ -1,4 +1,5 @@
 // agent.js — pico-agent: LLM agents and tools
+import { dep } from '../versions.js';
 
 export default {
   name: 'agent',
@@ -35,7 +36,7 @@ class Assistant:
     pass
 `,
       },
-      dependencies: ['"pico-agent>=0.1.0"'],
+      dependencies: [dep('pico-agent')],
       requirements: ['pico-agent'],
     };
   },

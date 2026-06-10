@@ -1,4 +1,5 @@
 // auth.js — pico-client-auth: JWT authentication with RBAC
+import { dep } from '../versions.js';
 
 export default {
   name: 'auth',
@@ -42,7 +43,7 @@ class SecureController:
 
     const result = {
       files,
-      dependencies: ['"pico-client-auth>=0.1.0"'],
+      dependencies: [dep('pico-client-auth')],
       requirements: ['pico-client-auth'],
       yaml: `\nauth_client:\n  enabled: true\n  issuer: "http://localhost:8081"\n  audience: "my-api"\n`,
     };

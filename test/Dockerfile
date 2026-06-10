@@ -10,22 +10,21 @@ WORKDIR /opt/pico-initializer
 COPY js/ js/
 COPY cli.js .
 
-# Pre-install every possible dependency so per-combo installs are instant
-RUN pip install --no-cache-dir \
-    "pico-ioc[yaml]>=2.2.0" \
-    "pico-boot>=0.1.0" \
-    "pico-fastapi>=0.1.0" \
-    "pico-sqlalchemy>=0.1.0" \
-    "pico-celery>=0.1.0" \
-    "pico-pydantic>=0.1.0" \
-    "pico-agent>=0.1.0" \
-    "pico-client-auth>=0.1.0" \
+# Offline wheelhouse: per-combo venvs install from here so each generated
+# project gets ONLY its declared dependencies (constraints mirror js/versions.js)
+RUN pip download --no-cache-dir --dest /wheels \
+    "pico-ioc[yaml]>=2.2.7,<3.0" \
+    "pico-boot~=0.1.1" \
+    "pico-fastapi~=0.3.0" \
+    "pico-sqlalchemy~=0.4.0" \
+    "pico-celery~=0.2.1" \
+    "pico-pydantic~=0.2.2" \
+    "pico-agent~=0.2.0" \
+    "pico-client-auth~=0.4.2" \
     "aiosqlite>=0.20.0" \
-    "uvicorn" \
-    "redis" \
+    "redis>=5.0" \
     "httpx" \
     "setuptools>=69.0" \
-    "setuptools-scm>=8.0" \
     "wheel"
 
 RUN git config --global user.email "test@test.com" \

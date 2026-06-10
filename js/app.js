@@ -21,6 +21,7 @@ function readConfig({ includeExample = false, includeExampleCelery = false } = {
     modules,
     includeDocker: document.getElementById('include-docker').checked,
     includeTests: document.getElementById('include-tests').checked,
+    includeSkills: document.getElementById('include-skills').checked,
     includeCompose: document.getElementById('include-compose').checked,
     includeAuthServer: document.getElementById('include-auth-server').checked,
     includePicoModule: document.getElementById('include-pico-module').checked,

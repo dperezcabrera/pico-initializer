@@ -119,10 +119,12 @@ for raw_config in "${PHASE2_COMBOS[@]}"; do
         continue
     fi
 
-    # git init + install (editable) using system python (deps pre-installed)
-    (cd "$dir" && git init -q && git add -A && git commit -q -m "init") 2>/dev/null
-
-    install_out=$(cd "$dir" && SETUPTOOLS_SCM_PRETEND_VERSION=0.1.0 pip install -e . -q 2>&1) || true
+    # Per-combo venv with ONLY the project's declared deps — mirrors a real
+    # user environment. Installing into system site-packages (with every pico
+    # module present) would leak unselected plugins via pico-boot
+    # auto-discovery. Wheels come from the offline /wheels wheelhouse.
+    python -m venv "$dir/.venv"
+    install_out=$(cd "$dir" && .venv/bin/pip install -q --no-index --find-links=/wheels -e . httpx 2>&1) || true
     if echo "$install_out" | grep -qi "error"; then
         echo "FAIL (install)"
         P2_FAIL=$((P2_FAIL+1))
@@ -134,13 +136,13 @@ for raw_config in "${PHASE2_COMBOS[@]}"; do
     has_fastapi=$(echo "$raw_config" | jq '.modules | index("fastapi") != null')
 
     if [ "$has_fastapi" = "true" ]; then
-        result=$(cd "$dir" && PICO_BOOT_AUTO_PLUGINS=false python -c "
+        result=$(cd "$dir" && .venv/bin/python -c "
 from ${pkg}.main import app
 from fastapi.testclient import TestClient
 c = TestClient(app)
 r = c.get('/api/example/smoke')
 print(r.status_code)
-" 2>&1) || true
+" 2>/dev/null | tail -1) || true
 
         has_auth=$(echo "$raw_config" | jq '.modules | index("auth") != null')
         # With auth enabled, unprotected endpoints return 401 — that's correct behavior
@@ -157,7 +159,7 @@ print(r.status_code)
         fi
     else
         # Non-FastAPI: just check import works
-        result=$(cd "$dir" && PICO_BOOT_AUTO_PLUGINS=false python -c "from ${pkg}.services import ExampleService; print('ok')" 2>&1) || true
+        result=$(cd "$dir" && .venv/bin/python -c "from ${pkg}.services import ExampleService; print('ok')" 2>&1) || true
         if [ "$result" = "ok" ]; then
             echo "OK (import)"
             P2_PASS=$((P2_PASS+1))

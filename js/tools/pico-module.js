@@ -2,6 +2,8 @@
 // When active, overrides the default app scaffold with src/ layout,
 // entry point, ruff config, and module-oriented structure.
 
+import { dep } from '../versions.js';
+
 export default {
   name: 'pico-module',
   description: 'Scaffold a pico-boot module with entry point, ruff, and auto-discovery',
@@ -19,15 +21,15 @@ export default {
     const has = (m) => config.modules.includes(m);
 
     const deps = [
-      '    "pico-ioc[yaml]>=2.2.0",',
-      '    "pico-boot>=0.1.0",',
+      `    ${dep('pico-ioc', 'yaml')},`,
+      `    ${dep('pico-boot')},`,
     ];
-    if (has('fastapi'))    deps.push('    "pico-fastapi>=0.1.0",');
-    if (has('sqlalchemy')) deps.push('    "pico-sqlalchemy>=0.1.0",');
-    if (has('celery'))     deps.push('    "pico-celery>=0.1.0",');
-    if (has('pydantic'))   deps.push('    "pico-pydantic>=0.1.0",');
-    if (has('agent'))      deps.push('    "pico-agent>=0.1.0",');
-    if (has('auth'))       deps.push('    "pico-client-auth>=0.1.0",');
+    if (has('fastapi'))    deps.push(`    ${dep('pico-fastapi')},`);
+    if (has('sqlalchemy')) deps.push(`    ${dep('pico-sqlalchemy')},`);
+    if (has('celery'))     deps.push(`    ${dep('pico-celery')},`);
+    if (has('pydantic'))   deps.push(`    ${dep('pico-pydantic')},`);
+    if (has('agent'))      deps.push(`    ${dep('pico-agent')},`);
+    if (has('auth'))       deps.push(`    ${dep('pico-client-auth')},`);
 
     const files = {};
 
@@ -63,6 +65,7 @@ where = ["src"]
 
 [tool.setuptools_scm]
 version_scheme = "post-release"
+fallback_version = "0.0.0"
 
 [tool.ruff]
 target-version = "py${pyver.replace('.', '')}"
@@ -167,6 +170,37 @@ python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 ruff check src/ tests/
 pytest tests/
+\`\`\`
+`;
+
+    // CLAUDE.md — context for AI coding assistants
+    const SKILL_PACKAGES = ['fastapi', 'sqlalchemy', 'celery', 'pydantic', 'agent', 'auth'];
+    const skillPkgs = ['boot', ...config.modules.filter((m) => SKILL_PACKAGES.includes(m))];
+    const skillsCmd = config.includeSkills
+      ? 'bash install-skills.sh'
+      : `curl -sL https://raw.githubusercontent.com/dperezcabrera/pico-skills/main/install.sh | bash -s -- ${skillPkgs.join(' ')}`;
+    files['CLAUDE.md'] = `# ${name}
+
+A pico-boot auto-discoverable module (src/ layout, \`pico_boot.modules\` entry point).
+
+## Conventions
+
+- Components are classes decorated with \`@component\`; dependencies are injected via the constructor.
+- The module is auto-discovered by pico-boot in consuming apps — never listed in \`init(modules=[...])\`.
+- Configuration is read from the \`${pkg}:\` section of the consuming app's \`application.yaml\`.
+
+## Commands
+
+- Tests: \`pytest tests/\`
+- Lint: \`ruff check src/ tests/\`
+
+## Skills
+
+Pico skills (add-component, add-tests, ...) provide generators for these patterns.
+If \`.claude/skills/\` is missing, install them with:
+
+\`\`\`bash
+${skillsCmd}
 \`\`\`
 `;
 

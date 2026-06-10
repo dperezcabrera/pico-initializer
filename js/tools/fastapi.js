@@ -1,4 +1,5 @@
 // fastapi.js — pico-fastapi: controllers + HTTP routes
+import { dep } from '../versions.js';
 
 export default {
   name: 'fastapi',
@@ -29,7 +30,7 @@ class ExampleController:
         return {"message": message}
 `,
       },
-      dependencies: ['"pico-fastapi>=0.1.0"'],
+      dependencies: [dep('pico-fastapi')],
       requirements: ['pico-fastapi', 'uvicorn'],
       yaml: `\nfastapi:\n  title: "${config.projectName}"\n  version: "0.1.0"\n`,
     };

@@ -12,7 +12,9 @@ export default {
     const pkg = config.packageName;
     const hasFastapi = config.modules.includes('fastapi');
 
-    let conftest = `import pytest
+    let conftest = `import asyncio
+
+import pytest
 
 from pico_boot import init
 from pico_ioc import configuration, YamlTreeSource
@@ -34,8 +36,7 @@ def container():
         config=config,
     )
     yield c
-    import asyncio
-    asyncio.get_event_loop().run_until_complete(c.ashutdown())
+    asyncio.run(c.ashutdown())
 `;
 
     if (hasFastapi) {
@@ -48,10 +49,19 @@ def client(container):
 `;
     }
 
+    const testApp = `from ${pkg}.services import ExampleService
+
+
+def test_greet(container):
+    service = container.get(ExampleService)
+    assert service.greet("world").startswith("Hello world")
+`;
+
     return {
       files: {
         'tests/__init__.py': '',
         'tests/conftest.py': conftest,
+        'tests/test_app.py': testApp,
       },
     };
   },

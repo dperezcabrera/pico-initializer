@@ -1,4 +1,5 @@
 // sqlalchemy.js — pico-sqlalchemy: models + repositories
+import { dep } from '../versions.js';
 
 export default {
   name: 'sqlalchemy',
@@ -51,7 +52,7 @@ class ExampleRepository:
         return await session.get(ExampleEntity, entity_id)
 `,
       },
-      dependencies: ['"pico-sqlalchemy>=0.1.0"', '"aiosqlite>=0.20.0"'],
+      dependencies: [dep('pico-sqlalchemy'), '"aiosqlite>=0.20.0"'],
       requirements: ['pico-sqlalchemy', 'aiosqlite'],
       yaml: `\ndatabase:\n  url: "sqlite+aiosqlite:///data.db"\n  echo: true\n`,
       serviceImports: `\nfrom ${pkg}.repositories import ExampleRepository\n`,

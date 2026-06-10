@@ -1,4 +1,5 @@
 // server-auth.js — pico-server-auth: embedded auth server with JWT, wallet login, JWKS
+import { dep } from '../versions.js';
 
 export default {
   name: 'server-auth',
@@ -43,7 +44,7 @@ export default {
 #         ...
 `,
       },
-      dependencies: ['"pico-server-auth>=0.1.0"'],
+      dependencies: [dep('pico-server-auth')],
       requirements: ['pico-server-auth'],
       yaml: `\nserver_auth:\n  issuer: "http://localhost:8000"\n  audience: "${config.projectName}"\n  auto_create_admin: true\n  admin_email: "admin@example.com"\n  admin_password: "changeme"\n`,
     };
