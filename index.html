@@ -342,6 +342,26 @@
               <span class="mod-name">pico-server-auth</span>
               <span class="mod-desc">Auth server (wallet + JWT)</span>
             </label>
+            <label class="mod-row" data-search="pico-actuator health readiness liveness probes info metrics prometheus kubernetes observability">
+              <input type="checkbox" name="module" value="actuator">
+              <span class="mod-name">pico-actuator</span>
+              <span class="mod-desc">Health + metrics endpoints</span>
+            </label>
+            <label class="mod-row" data-search="pico-resilience retry circuit breaker timeout backoff fault tolerance">
+              <input type="checkbox" name="module" value="resilience">
+              <span class="mod-name">pico-resilience</span>
+              <span class="mod-desc">Retry + circuit breaker + timeout</span>
+            </label>
+            <label class="mod-row" data-search="pico-caching cache cacheable memoize ttl backend">
+              <input type="checkbox" name="module" value="cache">
+              <span class="mod-name">pico-caching</span>
+              <span class="mod-desc">Method result caching</span>
+            </label>
+            <label class="mod-row" data-search="pico-otel opentelemetry traces metrics otlp observability instrumentation">
+              <input type="checkbox" name="module" value="otel">
+              <span class="mod-name">pico-otel</span>
+              <span class="mod-desc">OpenTelemetry traces + metrics</span>
+            </label>
           </div>
           <p id="no-results" style="display:none; padding:.8rem 0; font-size:.75rem; color:var(--md-on-bg-light);">No matches.</p>
         </div>
