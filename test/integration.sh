@@ -217,9 +217,9 @@ EXTRA
     # Endpoint test (auto-discovery active)
     # stderr discarded: deprecation warnings must not pollute the status code
     result=$(cd "$WORK/my-service" && python -c "
-from my_service.main import app
+from my_service.main import create_app
 from fastapi.testclient import TestClient
-c = TestClient(app)
+c = TestClient(create_app())
 r = c.get('/api/example/test')
 print(r.status_code)
 " 2>/dev/null | tail -1) || true
