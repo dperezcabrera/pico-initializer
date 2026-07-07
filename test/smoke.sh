@@ -137,9 +137,9 @@ for raw_config in "${PHASE2_COMBOS[@]}"; do
 
     if [ "$has_fastapi" = "true" ]; then
         result=$(cd "$dir" && .venv/bin/python -c "
-from ${pkg}.main import app
+from ${pkg}.main import create_app
 from fastapi.testclient import TestClient
-c = TestClient(app)
+c = TestClient(create_app())
 r = c.get('/api/example/smoke')
 print(r.status_code)
 " 2>/dev/null | tail -1) || true
