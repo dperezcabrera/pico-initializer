@@ -3,7 +3,7 @@ set -euo pipefail
 
 CLI="/opt/pico-initializer/cli.js"
 WORK="/tmp/smoke"
-MODULES=(fastapi sqlalchemy celery pydantic agent auth)
+MODULES=(fastapi sqlalchemy celery pydantic agent auth server-auth actuator resilience cache otel)
 PASS=0
 FAIL=0
 ERRORS=""

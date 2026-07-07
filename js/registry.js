@@ -11,6 +11,10 @@ import pydantic from './tools/pydantic.js';
 import agent from './tools/agent.js';
 import auth from './tools/auth.js';
 import serverAuth from './tools/server-auth.js';
+import actuator from './tools/actuator.js';
+import resilience from './tools/resilience.js';
+import cache from './tools/cache.js';
+import otel from './tools/otel.js';
 import docker from './tools/docker.js';
 import compose from './tools/compose.js';
 import tests from './tools/tests.js';
@@ -29,6 +33,10 @@ appGenerator
   .register(agent)
   .register(auth)
   .register(serverAuth)
+  .register(actuator)
+  .register(resilience)
+  .register(cache)
+  .register(otel)
   .register(docker)
   .register(compose)
   .register(tests)

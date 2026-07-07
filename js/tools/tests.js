@@ -26,13 +26,29 @@ from fastapi.testclient import TestClient
 `;
     }
 
+    const PKG_OF = {
+      fastapi: 'pico_fastapi', sqlalchemy: 'pico_sqlalchemy', celery: 'pico_celery',
+      pydantic: 'pico_pydantic', agent: 'pico_agent', auth: 'pico_client_auth',
+      'server-auth': 'pico_server_auth', actuator: 'pico_actuator',
+      resilience: 'pico_resilience', cache: 'pico_caching', otel: 'pico_otel',
+    };
+    const explicitModules = ['"' + pkg + '"']
+      .concat(config.modules.filter((m) => PKG_OF[m]).map((m) => '"' + PKG_OF[m] + '"'))
+      .join(', ');
+
     conftest += `
+
+@pytest.fixture(autouse=True)
+def _deterministic_plugins(monkeypatch):
+    \"\"\"Same composition as production, immune to extra packages in the venv.\"\"\"
+    monkeypatch.setenv("PICO_BOOT_AUTO_PLUGINS", "false")
+
 
 @pytest.fixture
 def container():
     config = configuration(YamlTreeSource("application.yaml"))
     c = init(
-        modules=["${pkg}"],
+        modules=[${explicitModules}],
         config=config,
     )
     yield c

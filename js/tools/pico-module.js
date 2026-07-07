@@ -113,12 +113,31 @@ class ${pascal}Service:
 from pico_ioc import DictSource, configuration, init
 
 
+@pytest.fixture(autouse=True)
+def _isolate_from_env_plugins(monkeypatch):
+    \"\"\"Tests must not depend on which pico plugins happen to be installed.\"\"\"
+    monkeypatch.setenv("PICO_BOOT_AUTO_PLUGINS", "false")
+
+
 @pytest.fixture
-def container():
-    config = configuration(DictSource({"${pkg}": {"enabled": True}}))
-    c = init(modules=["${pkg}"], config=config)
-    yield c
-    c.shutdown()
+def make_container():
+    \"\"\"Factory: build a container with this module plus explicit extras.\"\"\"
+    created = []
+
+    def _make(*extra_modules, **${pkg}_cfg):
+        config = configuration(DictSource({"${pkg}": ${pkg}_cfg or {"enabled": True}}))
+        c = init(modules=["${pkg}", *extra_modules], config=config)
+        created.append(c)
+        return c
+
+    yield _make
+    for c in created:
+        c.shutdown()
+
+
+@pytest.fixture
+def container(make_container):
+    return make_container()
 `;
 
     files['tests/test_module.py'] = `from ${pkg}.components import ${pascal}Service

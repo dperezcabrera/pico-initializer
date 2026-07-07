@@ -51,7 +51,7 @@ export default {
 
     // main.py
     if (has('fastapi')) {
-      files[`${pkg}/main.py`] = `from fastapi import FastAPI\nfrom pico_boot import init\nfrom pico_ioc import configuration, YamlTreeSource\n\n\ndef create_app() -> FastAPI:\n    config = configuration(YamlTreeSource("application.yaml"))\n    container = init(modules=["${pkg}"], config=config)\n    return container.get(FastAPI)\n\n\napp = create_app()\n`;
+      files[`${pkg}/main.py`] = `from fastapi import FastAPI\nfrom pico_boot import init\nfrom pico_ioc import configuration, YamlTreeSource\n\n\n# Import-safe: nothing boots at import time. Run with uvicorn --factory.\ndef create_app() -> FastAPI:\n    config = configuration(YamlTreeSource("application.yaml"))\n    container = init(modules=["${pkg}"], config=config)\n    return container.get(FastAPI)\n\n\nif __name__ == "__main__":\n    import uvicorn\n\n    uvicorn.run(create_app(), host="0.0.0.0", port=8000)\n`;
     } else {
       files[`${pkg}/main.py`] = `import asyncio\n\nfrom pico_boot import init\nfrom pico_ioc import configuration, YamlTreeSource\n\nfrom ${pkg}.services import ExampleService\n\n\nasync def main():\n    config = configuration(YamlTreeSource("application.yaml"))\n    container = init(modules=["${pkg}"], config=config)\n    service = await container.aget(ExampleService)\n    print(service.greet("world"))\n    await container.ashutdown()\n\n\nif __name__ == "__main__":\n    asyncio.run(main())\n`;
     }
@@ -77,7 +77,7 @@ export default {
     // README.md
     let run = '';
     if (has('fastapi')) {
-      run = `\n## Run\n\n\`\`\`bash\nuvicorn ${pkg}.main:app --reload\n\`\`\`\n`;
+      run = `\n## Run\n\n\`\`\`bash\nuvicorn --factory ${pkg}.main:create_app --reload\n\`\`\`\n`;
     }
     const moduleList = config.modules.length > 0
       ? config.modules.map((m) => `- pico-${m}`).join('\n')
@@ -95,7 +95,7 @@ export default {
 
     // CLAUDE.md — context for AI coding assistants
     const runCmd = has('fastapi')
-      ? `uvicorn ${pkg}.main:app --reload`
+      ? `uvicorn --factory ${pkg}.main:create_app --reload`
       : `python -m ${pkg}.main`;
     files['CLAUDE.md'] = `# ${config.projectName}
 

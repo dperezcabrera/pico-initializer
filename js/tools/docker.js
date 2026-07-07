@@ -11,7 +11,7 @@ export default {
   generate(config) {
     const hasFastapi = config.modules.includes('fastapi');
     const cmd = hasFastapi
-      ? `CMD ["uvicorn", "${config.packageName}.main:app", "--host", "0.0.0.0", "--port", "8000"]`
+      ? `CMD ["uvicorn", "--factory", "${config.packageName}.main:create_app", "--host", "0.0.0.0", "--port", "8000"]`
       : `CMD ["python", "-m", "${config.packageName}.main"]`;
 
     return {

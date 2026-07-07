@@ -15,6 +15,10 @@ export const PICO_VERSIONS = {
   'pico-agent': '~=0.2.0',
   'pico-client-auth': '~=0.4.2',
   'pico-server-auth': '~=0.1.2',
+  'pico-actuator': '~=0.1.0',
+  'pico-resilience': '~=0.1.0',
+  'pico-caching': '~=0.1.0',
+  'pico-otel': '~=0.1.0',
 };
 
 // Returns a quoted requirement string for pyproject.toml, e.g.
