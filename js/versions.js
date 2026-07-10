@@ -7,14 +7,14 @@
 
 export const PICO_VERSIONS = {
   'pico-ioc': '>=2.2.7,<3.0',
-  'pico-boot': '~=0.1.2',
-  'pico-fastapi': '~=0.3.0',
+  'pico-boot': '~=0.2.0',
+  'pico-fastapi': '~=0.3.1',
   'pico-sqlalchemy': '~=0.5.0',
   'pico-celery': '~=0.2.2',
   'pico-pydantic': '~=0.2.2',
   'pico-agent': '~=0.2.0',
-  'pico-client-auth': '~=0.4.2',
-  'pico-server-auth': '~=0.1.2',
+  'pico-client-auth': '~=0.5.0',
+  'pico-server-auth': '~=0.2.0',
   'pico-actuator': '~=0.2.0',
   'pico-resilience': '~=0.2.0',
   'pico-caching': '~=0.1.0',
