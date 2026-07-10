@@ -19,6 +19,11 @@ export const PICO_VERSIONS = {
   'pico-resilience': '~=0.1.0',
   'pico-caching': '~=0.1.0',
   'pico-otel': '~=0.1.0',
+  'pico-scheduling': '~=0.1.0',
+  'pico-httpx': '~=0.1.0',
+  'pico-data-redis': '~=0.1.0',
+  'pico-rabbitmq': '~=0.1.0',
+  'pico-kafka': '~=0.1.0',
 };
 
 // Returns a quoted requirement string for pyproject.toml, e.g.

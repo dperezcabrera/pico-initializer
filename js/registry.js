@@ -15,6 +15,11 @@ import actuator from './tools/actuator.js';
 import resilience from './tools/resilience.js';
 import cache from './tools/cache.js';
 import otel from './tools/otel.js';
+import scheduling from './tools/scheduling.js';
+import httpx from './tools/httpx.js';
+import dataRedis from './tools/data-redis.js';
+import rabbitmq from './tools/rabbitmq.js';
+import kafka from './tools/kafka.js';
 import docker from './tools/docker.js';
 import compose from './tools/compose.js';
 import tests from './tools/tests.js';
@@ -37,6 +42,11 @@ appGenerator
   .register(resilience)
   .register(cache)
   .register(otel)
+  .register(scheduling)
+  .register(httpx)
+  .register(dataRedis)
+  .register(rabbitmq)
+  .register(kafka)
   .register(docker)
   .register(compose)
   .register(tests)
