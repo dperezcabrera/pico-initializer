@@ -51,6 +51,7 @@ ${deps.join('\n')}
 dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.24.0",
+    "pico-testing>=0.2.0",
     "ruff>=0.9.0",
 ]
 
@@ -66,6 +67,9 @@ where = ["src"]
 [tool.setuptools_scm]
 version_scheme = "post-release"
 fallback_version = "0.0.0"
+
+[tool.pytest.ini_options]
+pico_module = "${pkg}"
 
 [tool.ruff]
 target-version = "py${pyver.replace('.', '')}"
@@ -110,29 +114,16 @@ class ${pascal}Service:
 
     files['tests/conftest.py'] = `import pytest
 
-from pico_ioc import DictSource, configuration, init
-
-
-@pytest.fixture(autouse=True)
-def _isolate_from_env_plugins(monkeypatch):
-    \"\"\"Tests must not depend on which pico plugins happen to be installed.\"\"\"
-    monkeypatch.setenv("PICO_BOOT_AUTO_PLUGINS", "false")
-
 
 @pytest.fixture
-def make_container():
-    \"\"\"Factory: build a container with this module plus explicit extras.\"\"\"
-    created = []
+def make_container(make_container):
+    \"\"\"Extends the pico-testing fixture: kwargs become the ${pkg} config section.\"\"\"
+    plugin_make = make_container
 
     def _make(*extra_modules, **${pkg}_cfg):
-        config = configuration(DictSource({"${pkg}": ${pkg}_cfg or {"enabled": True}}))
-        c = init(modules=["${pkg}", *extra_modules], config=config)
-        created.append(c)
-        return c
+        return plugin_make(*extra_modules, config={"${pkg}": ${pkg}_cfg or {"enabled": True}})
 
-    yield _make
-    for c in created:
-        c.shutdown()
+    return _make
 
 
 @pytest.fixture
