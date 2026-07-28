@@ -6,7 +6,7 @@
 // projects receive patches but never an API-breaking minor bump.
 
 export const PICO_VERSIONS = {
-  'pico-ioc': '>=2.2.7,<3.0',
+  'pico-ioc': '>=2.4.0,<3.0',
   'pico-boot': '~=0.2.0',
   'pico-fastapi': '~=0.3.1',
   'pico-sqlalchemy': '~=0.5.0',
@@ -27,7 +27,7 @@ export const PICO_VERSIONS = {
 };
 
 // Returns a quoted requirement string for pyproject.toml, e.g.
-//   dep('pico-ioc', 'yaml') -> '"pico-ioc[yaml]>=2.2.7,<3.0"'
+//   dep('pico-ioc', 'yaml') -> '"pico-ioc[yaml]>=2.4.0,<3.0"'
 export function dep(name, extra) {
   const constraint = PICO_VERSIONS[name];
   if (!constraint) throw new Error(`Unknown pico package: ${name}`);

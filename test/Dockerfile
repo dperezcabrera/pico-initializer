@@ -13,7 +13,7 @@ COPY cli.js .
 # Offline wheelhouse: per-combo venvs install from here so each generated
 # project gets ONLY its declared dependencies (constraints mirror js/versions.js)
 RUN pip download --no-cache-dir --dest /wheels \
-    "pico-ioc[yaml]>=2.2.7,<3.0" \
+    "pico-ioc[yaml]>=2.4.0,<3.0" \
     "pico-boot~=0.1.2" \
     "pico-fastapi~=0.3.0" \
     "pico-sqlalchemy~=0.4.0" \
