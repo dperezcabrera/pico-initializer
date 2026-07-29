@@ -13,15 +13,11 @@ WORKDIR /opt/pico-initializer
 COPY js/ js/
 COPY cli.js .
 
-# Pre-install all pico dependencies (constraints mirror js/versions.js)
-RUN pip install --no-cache-dir \
-    "pico-ioc[yaml]>=2.4.0,<3.0" \
-    "pico-boot~=0.1.2" \
-    "pico-fastapi~=0.3.0" \
-    "pico-sqlalchemy~=0.4.0" \
-    "pico-celery~=0.2.2" \
-    "pico-pydantic~=0.2.2" \
-    "pico-client-auth~=0.4.2" \
+# Pre-install all pico dependencies. Constraints are GENERATED from
+# js/versions.js (single source of truth) — hand-copied lists drift.
+RUN node --input-type=module -e 'const { PICO_VERSIONS } = await import("file:///opt/pico-initializer/js/versions.js"); console.log(Object.entries(PICO_VERSIONS).map(([n, v]) => (n === "pico-ioc" ? n + "[yaml]" + v : n + v)).join("\n"));' > /tmp/pico-requirements.txt \
+ && pip install --no-cache-dir \
+    -r /tmp/pico-requirements.txt \
     "aiosqlite>=0.20.0" \
     "uvicorn" \
     "httpx" \

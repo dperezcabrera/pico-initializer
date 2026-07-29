@@ -11,16 +11,12 @@ COPY js/ js/
 COPY cli.js .
 
 # Offline wheelhouse: per-combo venvs install from here so each generated
-# project gets ONLY its declared dependencies (constraints mirror js/versions.js)
-RUN pip download --no-cache-dir --dest /wheels \
-    "pico-ioc[yaml]>=2.4.0,<3.0" \
-    "pico-boot~=0.1.2" \
-    "pico-fastapi~=0.3.0" \
-    "pico-sqlalchemy~=0.4.0" \
-    "pico-celery~=0.2.2" \
-    "pico-pydantic~=0.2.2" \
-    "pico-agent~=0.2.0" \
-    "pico-client-auth~=0.4.2" \
+# project gets ONLY its declared dependencies. The pico-* constraints are
+# GENERATED from js/versions.js (the single source of truth) — a hand-copied
+# list here drifted and broke the smoke tests for two weeks.
+RUN node --input-type=module -e 'const { PICO_VERSIONS } = await import("file:///opt/pico-initializer/js/versions.js"); console.log(Object.entries(PICO_VERSIONS).map(([n, v]) => (n === "pico-ioc" ? n + "[yaml]" + v : n + v)).join("\n"));' > /tmp/pico-requirements.txt \
+ && pip download --no-cache-dir --dest /wheels \
+    -r /tmp/pico-requirements.txt \
     "aiosqlite>=0.20.0" \
     "redis>=5.0" \
     "httpx" \
