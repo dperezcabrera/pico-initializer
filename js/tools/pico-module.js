@@ -28,7 +28,6 @@ export default {
     if (has('sqlalchemy')) deps.push(`    ${dep('pico-sqlalchemy')},`);
     if (has('celery'))     deps.push(`    ${dep('pico-celery')},`);
     if (has('pydantic'))   deps.push(`    ${dep('pico-pydantic')},`);
-    if (has('agent'))      deps.push(`    ${dep('pico-agent')},`);
     if (has('auth'))       deps.push(`    ${dep('pico-client-auth')},`);
 
     const files = {};
@@ -184,7 +183,7 @@ pytest tests/
 `;
 
     // CLAUDE.md — context for AI coding assistants
-    const SKILL_PACKAGES = ['fastapi', 'sqlalchemy', 'celery', 'pydantic', 'agent', 'auth'];
+    const SKILL_PACKAGES = ['fastapi', 'sqlalchemy', 'celery', 'pydantic', 'auth'];
     const skillPkgs = ['boot', ...config.modules.filter((m) => SKILL_PACKAGES.includes(m))];
     const skillsCmd = config.includeSkills
       ? 'bash install-skills.sh'

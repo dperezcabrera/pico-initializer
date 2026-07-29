@@ -13,7 +13,7 @@ export default {
   },
 
   generate(config) {
-    const SKILL_PACKAGES = ['fastapi', 'sqlalchemy', 'celery', 'pydantic', 'agent', 'auth'];
+    const SKILL_PACKAGES = ['fastapi', 'sqlalchemy', 'celery', 'pydantic', 'auth'];
     const pkgs = ['boot', ...config.modules.filter((m) => SKILL_PACKAGES.includes(m))];
 
     const script = `#!/usr/bin/env bash

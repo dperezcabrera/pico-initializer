@@ -28,7 +28,7 @@ from fastapi.testclient import TestClient
 
     const PKG_OF = {
       fastapi: 'pico_fastapi', sqlalchemy: 'pico_sqlalchemy', celery: 'pico_celery',
-      pydantic: 'pico_pydantic', agent: 'pico_agent', auth: 'pico_client_auth',
+      pydantic: 'pico_pydantic', auth: 'pico_client_auth',
       'server-auth': 'pico_server_auth', actuator: 'pico_actuator',
       resilience: 'pico_resilience', cache: 'pico_caching', otel: 'pico_otel',
     };

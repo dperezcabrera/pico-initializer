@@ -84,7 +84,7 @@ export default {
       : '- pico-ioc\n- pico-boot';
 
     // AI skills: tailor the pico-skills installer to the selected modules
-    const SKILL_PACKAGES = ['fastapi', 'sqlalchemy', 'celery', 'pydantic', 'agent', 'auth'];
+    const SKILL_PACKAGES = ['fastapi', 'sqlalchemy', 'celery', 'pydantic', 'auth'];
     const skillPkgs = ['boot', ...config.modules.filter((m) => SKILL_PACKAGES.includes(m))];
     const skillsCmd = config.includeSkills
       ? 'bash install-skills.sh'

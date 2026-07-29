@@ -12,7 +12,6 @@ export const PICO_VERSIONS = {
   'pico-sqlalchemy': '~=0.5.0',
   'pico-celery': '~=0.2.2',
   'pico-pydantic': '~=0.2.2',
-  'pico-agent': '~=0.2.0',
   'pico-client-auth': '~=0.5.0',
   'pico-server-auth': '~=0.2.0',
   'pico-actuator': '~=0.2.0',

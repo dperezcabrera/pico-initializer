@@ -3,7 +3,7 @@ set -euo pipefail
 
 CLI="/opt/pico-initializer/cli.js"
 WORK="/tmp/smoke"
-MODULES=(fastapi sqlalchemy celery pydantic agent auth server-auth actuator resilience cache otel)
+MODULES=(fastapi sqlalchemy celery pydantic auth server-auth actuator resilience cache otel)
 PASS=0
 FAIL=0
 ERRORS=""
@@ -86,7 +86,7 @@ PHASE2_COMBOS=(
     '{"projectName":"rt-fastapi","modules":["fastapi"]}'
     '{"projectName":"rt-fastapi-sqla","modules":["fastapi","sqlalchemy"]}'
     '{"projectName":"rt-fastapi-auth","modules":["fastapi","auth"]}'
-    '{"projectName":"rt-full","modules":["fastapi","sqlalchemy","celery","pydantic","agent","auth"]}'
+    '{"projectName":"rt-full","modules":["fastapi","sqlalchemy","celery","pydantic","auth"]}'
 )
 
 echo "── Phase 2: runtime endpoint test (${#PHASE2_COMBOS[@]} key combos) ──"

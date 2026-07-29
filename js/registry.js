@@ -8,7 +8,6 @@ import fastapi from './tools/fastapi.js';
 import sqlalchemy from './tools/sqlalchemy.js';
 import celery from './tools/celery.js';
 import pydantic from './tools/pydantic.js';
-import agent from './tools/agent.js';
 import auth from './tools/auth.js';
 import serverAuth from './tools/server-auth.js';
 import actuator from './tools/actuator.js';
@@ -35,7 +34,6 @@ appGenerator
   .register(sqlalchemy)
   .register(celery)
   .register(pydantic)
-  .register(agent)
   .register(auth)
   .register(serverAuth)
   .register(actuator)
