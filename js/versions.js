@@ -32,3 +32,21 @@ export function dep(name, extra) {
   if (!constraint) throw new Error(`Unknown pico package: ${name}`);
   return `"${name}${extra ? `[${extra}]` : ''}${constraint}"`;
 }
+
+// Python versions the fleet tests in CI, oldest first. Keep in sync with the
+// ci.yml matrix and with the option list in index.html.
+export const PYTHON_VERSIONS = ['3.11', '3.12', '3.13', '3.14'];
+
+// Trove classifiers for a module whose floor is `pyver`, covering every tested
+// version from that floor up. Without these, PyPI shows the package as
+// unsupported on newer Pythons that CI actually tests.
+export function pythonClassifiers(pyver) {
+  const i = PYTHON_VERSIONS.indexOf(pyver);
+  return [
+    '    "Programming Language :: Python :: 3",',
+    '    "Programming Language :: Python :: 3 :: Only",',
+    ...PYTHON_VERSIONS.slice(i === -1 ? 0 : i).map(
+      (v) => `    "Programming Language :: Python :: ${v}",`,
+    ),
+  ].join('\n');
+}

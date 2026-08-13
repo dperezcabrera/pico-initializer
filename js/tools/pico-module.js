@@ -2,7 +2,7 @@
 // When active, overrides the default app scaffold with src/ layout,
 // entry point, ruff config, and module-oriented structure.
 
-import { dep } from '../versions.js';
+import { dep, pythonClassifiers } from '../versions.js';
 
 export default {
   name: 'pico-module',
@@ -42,6 +42,9 @@ name = "${name}"
 description = "${config.description}"
 requires-python = ">=${pyver}"
 dynamic = ["version"]
+classifiers = [
+${pythonClassifiers(pyver)}
+]
 dependencies = [
 ${deps.join('\n')}
 ]
