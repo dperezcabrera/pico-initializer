@@ -1,28 +1,29 @@
 // versions.js — Single source of truth for pico-* dependency constraints
 // used in generated projects.
 //
-// Update these when releasing a new pico-* version (see the `release` skill
+// Kept in sync with the newest release train in pico-bom (the versions validated
+// together). Update when releasing a new pico-* version (see the `release` skill
 // in pico-skills). Constraints use compatible-release (~=) so generated
 // projects receive patches but never an API-breaking minor bump.
 
 export const PICO_VERSIONS = {
-  'pico-ioc': '>=2.4.0,<3.0',
+  'pico-ioc': '>=2.5.1,<3.0',
   'pico-boot': '~=0.2.0',
-  'pico-fastapi': '~=0.3.1',
-  'pico-sqlalchemy': '~=0.5.0',
-  'pico-celery': '~=0.2.2',
-  'pico-pydantic': '~=0.2.2',
-  'pico-client-auth': '~=0.5.0',
-  'pico-server-auth': '~=0.2.0',
-  'pico-actuator': '~=0.2.0',
-  'pico-resilience': '~=0.2.0',
-  'pico-caching': '~=0.1.0',
+  'pico-fastapi': '~=0.4.0',
+  'pico-sqlalchemy': '~=0.5.1',
+  'pico-celery': '~=0.2.3',
+  'pico-pydantic': '~=0.2.3',
+  'pico-client-auth': '~=0.7.0',
+  'pico-server-auth': '~=0.2.1',
+  'pico-actuator': '~=0.2.1',
+  'pico-resilience': '~=0.2.1',
+  'pico-caching': '~=0.1.1',
   'pico-otel': '~=0.1.0',
   'pico-scheduling': '~=0.1.0',
   'pico-httpx': '~=0.1.0',
   'pico-data-redis': '~=0.1.0',
-  'pico-rabbitmq': '~=0.1.0',
-  'pico-kafka': '~=0.1.0',
+  'pico-rabbitmq': '~=0.1.1',
+  'pico-kafka': '~=0.1.5',
 };
 
 // Returns a quoted requirement string for pyproject.toml, e.g.
