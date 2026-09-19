@@ -9,7 +9,7 @@
 export const PICO_VERSIONS = {
   'pico-ioc': '>=2.5.1,<3.0',
   'pico-boot': '~=0.2.0',
-  'pico-fastapi': '~=0.4.0',
+  'pico-fastapi': '~=0.4.1',
   'pico-sqlalchemy': '~=0.5.1',
   'pico-celery': '~=0.2.3',
   'pico-pydantic': '~=0.2.3',
