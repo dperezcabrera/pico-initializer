@@ -215,14 +215,16 @@ celery:
 EXTRA
 
     # Endpoint test (auto-discovery active)
-    # stderr discarded: deprecation warnings must not pollute the status code
+    # stderr discarded: deprecation warnings must not pollute the status code.
+    # The status is tagged: other stdout (e.g. spans from pico-otel's console
+    # exporter, which FastAPI >= 0.142 now produces) must not be mistaken for it.
     result=$(cd "$WORK/my-service" && python -c "
 from my_service.main import create_app
 from fastapi.testclient import TestClient
 c = TestClient(create_app())
 r = c.get('/api/example/test')
-print(r.status_code)
-" 2>/dev/null | tail -1) || true
+print('PICO_STATUS=%s' % r.status_code)
+" 2>/dev/null | sed -n 's/^PICO_STATUS=//p' | tail -1) || true
 
     if [ "$result" = "401" ] || [ "$result" = "200" ]; then
         echo "    endpoint: OK ($result)"
