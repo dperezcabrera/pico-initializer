@@ -7,9 +7,9 @@
 // projects receive patches but never an API-breaking minor bump.
 
 export const PICO_VERSIONS = {
-  'pico-ioc': '>=2.5.1,<3.0',
+  'pico-ioc': '>=2.5.2,<3.0',
   'pico-boot': '~=0.2.1',
-  'pico-fastapi': '~=0.4.3',
+  'pico-fastapi': '~=0.4.4',
   'pico-sqlalchemy': '~=0.5.3',
   'pico-celery': '~=0.2.4',
   'pico-pydantic': '~=0.2.4',
